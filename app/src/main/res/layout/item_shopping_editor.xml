@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_item_topic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/CadetBlue"
+            android:textSize="24dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_title"/>
+        <EditText
+            android:id="@+id/etItemTitle"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:maxLength="10"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_grocery"/>
+        <EditText
+            android:id="@+id/etItemGrocery"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:maxLength="30"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_location"/>
+        <Spinner
+            android:id="@+id/spLocation"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_cancel"/>
+        <Button
+            android:id="@+id/btnEdit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_edit"/>
+    </LinearLayout>
+
+
+</LinearLayout>
