@@ -40,6 +40,10 @@ public class ShoppingListFragment extends Fragment {
     private MyAdapter myAdapter;
     private LinkedList<ArrayList<String>> dataList;
 
+    EditorDialogFragment editorDialogFragment;
+
+    final static int REQUEST_CODE = 123;
+
     public ShoppingListFragment() {
         // Required empty public constructor
     }
@@ -66,12 +70,14 @@ public class ShoppingListFragment extends Fragment {
         item.add("代辦");
         item.add("剪刀,石頭");
         item.add("aaa");
+        item.add("");
         dataList.add(item);
         ArrayList<String> item2 = new ArrayList();
         item2.add("2");
         item2.add("END");
         item2.add("布");
         item2.add("bbb");
+        item2.add("2019-12-24");
         dataList.add(item2);
 
 
@@ -101,15 +107,16 @@ public class ShoppingListFragment extends Fragment {
     };
 
     private void editItem(final int position){
-        EditorDialogFragment editor = new EditorDialogFragment(true,position,dataList);
-        editor.show(getChildFragmentManager(),"Editor");
+        editorDialogFragment = new EditorDialogFragment(true,position,dataList);
+        editorDialogFragment.setTargetFragment(ShoppingListFragment.this,REQUEST_CODE);
+        editorDialogFragment.show(getActivity().getSupportFragmentManager(),"Editor");
 
     }
 
     private void addItemView(){
-        EditorDialogFragment editor = new EditorDialogFragment(false,-1,dataList);
-        //editor.show(getActivity().getSupportFragmentManager(),"Dialog");
-        editor.show(getChildFragmentManager(),"Adder");
+        editorDialogFragment = new EditorDialogFragment(false,-1,dataList);
+        editorDialogFragment.setTargetFragment(ShoppingListFragment.this,REQUEST_CODE);
+        editorDialogFragment.show(getActivity().getSupportFragmentManager(),"Editor");
     }
 
 

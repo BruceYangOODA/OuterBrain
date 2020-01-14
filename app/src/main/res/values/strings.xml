@@ -13,6 +13,7 @@
     <string name="btn_cancel">取消</string>
     <string name="btn_edit">修改</string>
     <string name="btn_add">新增</string>
+    <string name="btn_ok">確定</string>
 
     <!--View-->
     <string name="tv_item_topic_editor">修改購物清單</string>
@@ -20,14 +21,18 @@
     <string name="tv_item_title">提示項目</string>
     <string name="tv_item_grocery">購物清單</string>
     <string name="tv_item_location">商店地點</string>
-    <string name="tv_item_date">時間</string>
-    <string name="tv_item_time">日期</string>
-    <string name="tv_item_notify">通知</string>
-
+    <string name="tv_item_date">日期</string>
+    <string name="tv_item_time">時間</string>
+    <string name="tv_item_notify">提醒</string>
+    <string name="tv_every_day">每日</string>
+    <string name="tv_target_day">當日</string>
+    <string name="tv_not_notify">不用</string>
+    <string name="tv_hint_date_picker">點擊選取日期</string>
+    <string name="tv_hint_time_picker">點擊選取時間</string>
     <string name="title_activity_maps">Map</string>
 
-
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

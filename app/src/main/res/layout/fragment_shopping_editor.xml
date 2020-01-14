@@ -59,10 +59,82 @@
             android:gravity="center"
             android:text="@string/tv_item_location"/>
         <Spinner
-            android:id="@+id/spLocation"
+            android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_weight="@integer/item_horizon_long"
             android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_date"/>
+        <TextView
+            android:id="@+id/tv_item_date"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:hint="@string/tv_hint_date_picker"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_time"/>
+        <TextView
+            android:id="@+id/tv_item_time"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:hint="@string/tv_hint_time_picker"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_notify"/>
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_not_notify"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_every_day"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_target_day"/>
+
+        </RadioGroup>
 
     </LinearLayout>
 
@@ -82,7 +154,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/btn_edit"/>
+            />
     </LinearLayout>
 
 
