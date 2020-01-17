@@ -11,6 +11,7 @@
     <string name="btn_show">顯示</string>
     <string name="btn_hide">隱藏</string>
     <string name="btn_cancel">取消</string>
+    <string name="btn_delete">刪除</string>
     <string name="btn_edit">修改</string>
     <string name="btn_add">新增</string>
     <string name="btn_ok">確定</string>
@@ -23,13 +24,20 @@
     <string name="tv_item_location">商店地點</string>
     <string name="tv_item_date">日期</string>
     <string name="tv_item_time">時間</string>
+    <string name="tv_item_ring">鈴聲</string>
     <string name="tv_item_notify">提醒</string>
     <string name="tv_every_day">每日</string>
     <string name="tv_target_day">當日</string>
     <string name="tv_not_notify">不用</string>
+    <string name="tv_system_ring">系統鈴聲</string>
+    <string name="tv_custom_ring">自訂鈴聲</string>
     <string name="tv_hint_date_picker">點擊選取日期</string>
     <string name="tv_hint_time_picker">點擊選取時間</string>
+    <string name="tv_hint_ring">點擊選取鈴聲</string>
     <string name="title_activity_maps">Map</string>
+
+    <string name="sys_cancel_progress_dialog">按返回鍵取消</string>
+    <string name="sys_loading_file">讀取檔案中</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

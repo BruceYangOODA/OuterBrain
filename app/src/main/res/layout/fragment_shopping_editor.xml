@@ -50,7 +50,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/text_view_click_height"
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/text_view_click_height"
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
@@ -86,7 +86,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/text_view_click_height"
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
@@ -104,7 +104,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/text_view_click_height"
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
@@ -113,6 +113,7 @@
             android:gravity="center"
             android:text="@string/tv_item_notify"/>
         <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="0dp"
             android:layout_weight="@integer/item_horizon_long"
             android:layout_height="wrap_content"
@@ -137,6 +138,24 @@
         </RadioGroup>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/text_view_click_height"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_ring"/>
+        <TextView
+            android:id="@+id/tv_item_ring"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:hint="@string/tv_hint_ring"
+            />
+    </LinearLayout>
 
 
     <LinearLayout
@@ -149,6 +168,12 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/btn_cancel"/>
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_delete"/>
         <Button
             android:id="@+id/btnEdit"
             android:layout_width="0dp"
