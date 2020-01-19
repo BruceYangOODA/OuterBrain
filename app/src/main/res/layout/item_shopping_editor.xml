@@ -7,46 +7,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:id="@+id/tv_item_topic"
+            android:id="@+id/tvTopic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/CadetBlue"
             android:textSize="24dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="@integer/item_horizon_short"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/tv_item_title"/>
-        <EditText
-            android:id="@+id/etItemTitle"
-            android:layout_width="0dp"
-            android:layout_weight="@integer/item_horizon_long"
-            android:layout_height="wrap_content"
-            android:maxLength="10"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="@integer/item_horizon_short"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/tv_item_grocery"/>
-        <EditText
-            android:id="@+id/etItemGrocery"
-            android:layout_width="0dp"
-            android:layout_weight="@integer/item_horizon_long"
-            android:layout_height="wrap_content"
-            android:maxLength="30"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +23,54 @@
             android:layout_weight="@integer/item_horizon_short"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/tv_item_location"/>
+            android:text="@string/tv_item_title"/>
+        <EditText
+            android:id="@+id/etSummary"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_item_buy"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_long"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/etGrocery"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                />
+            <Button
+                android:id="@+id/btnSmartInput"
+                android:layout_width="@dimen/text_view_click_width"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_smart_input"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/text_view_click_height"
+        android:orientation="horizontal">
+        <TextView
+            android:paddingTop="@dimen/text_view_padding_top_space"
+            android:layout_width="0dp"
+            android:layout_weight="@integer/item_horizon_short"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tv_shop_name"/>
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="0dp"
@@ -76,7 +89,7 @@
             android:gravity="center"
             android:text="@string/tv_item_date"/>
         <TextView
-            android:id="@+id/tv_item_date"
+            android:id="@+id/tvDate"
             android:layout_width="0dp"
             android:layout_weight="@integer/item_horizon_long"
             android:layout_height="wrap_content"
@@ -95,7 +108,7 @@
             android:gravity="center"
             android:text="@string/tv_item_time"/>
         <TextView
-            android:id="@+id/tv_item_time"
+            android:id="@+id/tvTime"
             android:layout_width="0dp"
             android:layout_weight="@integer/item_horizon_long"
             android:layout_height="wrap_content"
@@ -120,21 +133,23 @@
             android:orientation="horizontal"
             >
             <RadioButton
+                android:id="@+id/radio0"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_not_notify"/>
             <RadioButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_every_day"/>
-            <RadioButton
+                android:id="@+id/radio1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/tv_target_day"/>
-
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/tv_every_day"/>
         </RadioGroup>
 
     </LinearLayout>
@@ -149,12 +164,17 @@
             android:gravity="center"
             android:text="@string/tv_item_ring"/>
         <TextView
-            android:id="@+id/tv_item_ring"
+            android:id="@+id/tvRing"
             android:layout_width="0dp"
             android:layout_weight="@integer/item_horizon_long"
             android:layout_height="wrap_content"
             android:hint="@string/tv_hint_ring"
             />
+        <TextView
+            android:id="@+id/tvUri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 
 

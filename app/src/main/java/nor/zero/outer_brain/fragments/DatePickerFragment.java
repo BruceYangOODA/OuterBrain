@@ -8,18 +8,14 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import nor.zero.outer_brain.R;
-import static nor.zero.outer_brain.Constants.*;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,13 +31,15 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View dialogView = inflater.inflate(R.layout.fragment_date_picker, container, false);
+        View dialogView = inflater.inflate(R.layout.item_date_picker, container, false);
         datePicker = dialogView.findViewById(R.id.datePicker);
         setDateView();  //如果日期有資料,就選擇該日
         Button btnOk = dialogView.findViewById(R.id.btnOk);
         btnOk.setOnClickListener(btnOkClick);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(btnCancelClick);
+
+        getDialog().setTitle(getString(R.string.sys_select_date));
 
         return dialogView;
     }
@@ -63,8 +61,8 @@ public class DatePickerFragment extends DialogFragment {
             int day = datePicker.getDayOfMonth();
             String result = ""+year+"-"+ (month<10?"0":"")+month +"-"+(day<10?"0":"")+day;
             Intent intent = new Intent();
-            intent.putExtra(EditorDialogFragment.PICK_DATE,result);
-            getTargetFragment().onActivityResult(EditorDialogFragment.REQUEST_CODE_DATE,
+            intent.putExtra(ShoppingEditorFragment.PICK_DATE,result);
+            getTargetFragment().onActivityResult(ShoppingEditorFragment.REQUEST_CODE_DATE,
                     Activity.RESULT_OK,intent);     //用 setTargetFragment 註冊的訊息傳回資料
         }
     };

@@ -30,13 +30,15 @@ public class TimePickerFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View dialogView = inflater.inflate(R.layout.fragment_time_picker, container, false);
+        View dialogView = inflater.inflate(R.layout.item_time_picker, container, false);
         timePicker = dialogView.findViewById(R.id.timePicker);
         setTimeView();  //如果時間有資料,就選擇時間點
         Button btnOk = dialogView.findViewById(R.id.btnOk);
         btnOk.setOnClickListener(btnOkClick);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(btnCancelClick);
+
+        getDialog().setTitle(getString(R.string.sys_select_time));
 
         return dialogView;
     }
@@ -57,8 +59,8 @@ public class TimePickerFragment extends DialogFragment {
             int minutes = timePicker.getCurrentMinute();
             String result = (hour<10?"0":"")+ hour +":"+ (minutes<10?"0":"")+minutes;
             Intent intent = new Intent();
-            intent.putExtra(EditorDialogFragment.PICK_TIME,result);
-            getTargetFragment().onActivityResult(EditorDialogFragment.REQUEST_CODE_TIME,
+            intent.putExtra(ShoppingEditorFragment.PICK_TIME,result);
+            getTargetFragment().onActivityResult(ShoppingEditorFragment.REQUEST_CODE_TIME,
                     Activity.RESULT_OK,intent);
         }
     };

@@ -1,13 +1,12 @@
 package nor.zero.outer_brain.fragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -18,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +28,8 @@ import android.widget.TextView;
 import android.widget.ViewAnimator;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import nor.zero.outer_brain.R;
 
@@ -53,14 +49,15 @@ public class RingPickerFragment extends DialogFragment {
     MediaPlayer mediaPlayer;
     static int selectID = 0;
     static String CURRENT_PATH = "";
-    final static String RING_TITLE = "ringTitle";
-    final static String RING_URI = "ringUri";
-    final static String FILE_TYPE = "fileType";
-    final static String TYPE_FILE = "file";
-    final static String TYPE_DIRECTORY = "directory";
-    static String[] AUDIO_TYPE = {"mp3"} ;
+    final String RING_TITLE = "ringTitle";
+    final String RING_URI = "ringUri";
+    final String FILE_TYPE = "fileType";
+    final String TYPE_FILE = "file";
+    final String TYPE_DIRECTORY = "directory";
+    final String[] AUDIO_TYPE = {"mp3"} ;
+    String selectTitle ="";
+    String selectUri ="";
 
-    TextView testView;
 
     public RingPickerFragment() {
         // Required empty public constructor
@@ -74,7 +71,7 @@ public class RingPickerFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        dialogView = inflater.inflate(R.layout.fragment_ring_picker, container, false);
+        dialogView = inflater.inflate(R.layout.item_ring_picker, container, false);
         tvSystemRing = dialogView.findViewById(R.id.tvSystemRing);
         tvCustomRing = dialogView.findViewById(R.id.tvCustomRing);
         lvSystemRing = dialogView.findViewById(R.id.lvSystemRing);
@@ -91,16 +88,17 @@ public class RingPickerFragment extends DialogFragment {
         Button btnOk = dialogView.findViewById(R.id.btnOk);
         Button btnCancel = dialogView.findViewById(R.id.btnCancel);
         Button btnGoBack = dialogView.findViewById(R.id.btnGoBack);
+        Button btnStop = dialogView.findViewById(R.id.btnStop);
         btnOk.setOnClickListener(btnClick);
         btnCancel.setOnClickListener(btnClick);
         btnGoBack.setOnClickListener(btnClick);
+        btnStop.setOnClickListener(btnClick);
         tvSystemRing.setOnClickListener(textViewClick);
         tvCustomRing.setOnClickListener(textViewClick);
         lvSystemRing.setOnItemClickListener(lvSystemRingClick);
         lvCustomRing.setOnItemClickListener(lvCustomRingClick);
 
-        //test
-        testView = dialogView.findViewById(R.id.tvTest);
+        getDialog().setTitle(getString(R.string.sys_edit_ring_effect));
 
         return dialogView;
     }
@@ -135,6 +133,7 @@ public class RingPickerFragment extends DialogFragment {
                 dataSystemRing.add(item);
                 alarmsCursor.moveToNext();
             }
+            alarmsCursor.close();
         }
         catch (Exception e){}
     }
@@ -179,6 +178,7 @@ public class RingPickerFragment extends DialogFragment {
             int id = v.getId();
             switch (id){
                 case R.id.btnOk:
+                    setRingEffect();
                     break;
                 case R.id.btnCancel:
                     if(mediaPlayer!= null && mediaPlayer.isPlaying())
@@ -187,6 +187,10 @@ public class RingPickerFragment extends DialogFragment {
                     break;
                 case R.id.btnGoBack:
                     goBackDirectory();
+                    break;
+                case R.id.btnStop:
+                    if(mediaPlayer!= null && mediaPlayer.isPlaying())
+                        mediaPlayer.stop();
                     break;
             }
 
@@ -215,7 +219,10 @@ public class RingPickerFragment extends DialogFragment {
     AdapterView.OnItemClickListener lvSystemRingClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Uri uri = ringtoneManager.getRingtoneUri(position);
+            //Uri uri = ringtoneManager.getRingtoneUri(position);
+            selectTitle = dataSystemRing.get(position).get(RING_TITLE);
+            selectUri = dataSystemRing.get(position).get(RING_URI);
+            Uri uri = Uri.parse(selectUri);
             playSound(uri);
         }
     };
@@ -230,22 +237,34 @@ public class RingPickerFragment extends DialogFragment {
             }
             else if(fileType.equals(TYPE_FILE)){
                 String fileName = dataCustomRing.get(position).get(RING_TITLE);
+                String fileUri =  dataCustomRing.get(position).get(RING_URI);
                 int index = dataCustomRing.get(position).get(RING_TITLE).lastIndexOf('.');
-                String fileAtts = fileName.substring(index+1);
-                if(isAudio(fileAtts))
+                String fileAttr = fileName.substring(index+1);
+                if(isAudio(fileAttr))
                 {
-                    Uri uri = Uri.parse(dataCustomRing.get(position).get(RING_URI));
+                    selectTitle = fileName;
+                    selectUri = fileUri ;
+                    Uri uri = Uri.parse(fileUri);
                     playSound(uri);
                 }
             }
         }
     };
-    private boolean isAudio(String atts){
+    private boolean isAudio(String attr){
         for (String type : AUDIO_TYPE){
-            if(type.equals(atts))
+            if(type.equals(attr))
                 return true;
         }
         return false;
+    }
+    private void setRingEffect(){
+        if(mediaPlayer!= null && mediaPlayer.isPlaying())
+            mediaPlayer.stop();
+        Intent intent = new Intent();
+        intent.putExtra(ShoppingEditorFragment.PICK_RING_TITLE,selectTitle);
+        intent.putExtra(ShoppingEditorFragment.PICK_RING_URI,selectUri);
+        getTargetFragment().onActivityResult(ShoppingEditorFragment.REQUEST_CODE_RING,
+                Activity.RESULT_OK,intent);
     }
 
     private void playSound(Uri uri){
@@ -308,7 +327,6 @@ public class RingPickerFragment extends DialogFragment {
 
             adapterSystemRing.notifyDataSetChanged();
             adapterCustomRing.notifyDataSetChanged();
-            testView.setText(RingPickerFragment.CURRENT_PATH);
         }
     }
 

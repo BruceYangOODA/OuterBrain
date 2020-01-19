@@ -4,6 +4,8 @@
     <!--Fragment-->
     <string name="fragment_title_shopping_list">購物清單</string>
     <string name="fragment_title_gps_location">GPS 位置圖</string>
+    <string name="fragment_title_shop_location">商店位置</string>
+    <string name="fragment_title_grocery_list">商品清單</string>
 
 
     <!--Button-->
@@ -15,32 +17,51 @@
     <string name="btn_edit">修改</string>
     <string name="btn_add">新增</string>
     <string name="btn_ok">確定</string>
+    <string name="btn_back">返回上層</string>
+    <string name="btn_stop">停止播放</string>
+    <string name="btn_smart_input">智慧\n輸入</string>
 
     <!--View-->
     <string name="tv_item_topic_editor">修改購物清單</string>
     <string name="tv_item_topic_adder">新增購物清單</string>
-    <string name="tv_item_title">提示項目</string>
-    <string name="tv_item_grocery">購物清單</string>
-    <string name="tv_item_location">商店地點</string>
-    <string name="tv_item_date">日期</string>
-    <string name="tv_item_time">時間</string>
-    <string name="tv_item_ring">鈴聲</string>
-    <string name="tv_item_notify">提醒</string>
-    <string name="tv_every_day">每日</string>
-    <string name="tv_target_day">當日</string>
+    <string name="tv_item_title">提示:</string>
+    <string name="tv_item_buy">購買:</string>
+    <string name="tv_item_date">日期:</string>
+    <string name="tv_item_time">時間:</string>
+    <string name="tv_item_notify">提醒:</string>
+    <string name="tv_item_ring">鈴聲:</string>
     <string name="tv_not_notify">不用</string>
+    <string name="tv_target_day">當日</string>
+    <string name="tv_every_day">每日</string>
     <string name="tv_system_ring">系統鈴聲</string>
     <string name="tv_custom_ring">自訂鈴聲</string>
     <string name="tv_hint_date_picker">點擊選取日期</string>
     <string name="tv_hint_time_picker">點擊選取時間</string>
     <string name="tv_hint_ring">點擊選取鈴聲</string>
+    <string name="tv_shop_name">店名:</string>
+    <string name="tv_latitude">緯度:</string>
+    <string name="tv_longitude">經度:</string>
+    <string name="tv_note">備註:</string>
+    <string name="tv_classify">分類:</string>
+    <string name="tv_address">地址:</string>
+    <string name="tv_grocery_name">品名:</string>
+    <string name="tv_grocery_unit">單位:</string>
+
+
     <string name="title_activity_maps">Map</string>
 
     <string name="sys_cancel_progress_dialog">按返回鍵取消</string>
+    <string name="sys_edit_shop">修改商店資訊</string>
+    <string name="sys_edit_grocery">修改商品資訊</string>
+    <string name="sys_smart_input">輸入商品清單</string>
+    <string name="sys_edit_ring_effect">選擇鈴聲</string>
     <string name="sys_loading_file">讀取檔案中</string>
+    <string name="sys_select_date">選擇時間</string>
+    <string name="sys_select_time">選擇日期</string>
+    <string name="sys_invalidate_input_shop">請輸入店名與經緯度</string>
+    <string name="sys_invalidate_input_grocery">請輸入商品名稱</string>
+    <string name="sys_invalidate_input_buy">請輸入購買物品</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

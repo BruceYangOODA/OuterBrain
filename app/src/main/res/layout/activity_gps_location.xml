@@ -12,7 +12,8 @@
         android:layout_height="match_parent">
         <androidx.viewpager.widget.PagerTabStrip
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/text_view_click_height"
+            />
     </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

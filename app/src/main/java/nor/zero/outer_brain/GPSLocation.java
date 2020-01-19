@@ -2,60 +2,61 @@ package nor.zero.outer_brain;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 
 import nor.zero.outer_brain.fragments.GPSLocationFragment;
+import nor.zero.outer_brain.fragments.GroceryListFragment;
+import nor.zero.outer_brain.fragments.ShopListFragment;
 import nor.zero.outer_brain.fragments.ShoppingListFragment;
 
 public class GPSLocation extends AppCompatActivity {
 
     private ViewPager viewPager;
-    private Fragment[] fragments = new Fragment[2];
- //   private String[] titles = {getBaseContext().getString(R.string.fragment_title_shopping_list),
-  //          getBaseContext().getString(R.string.fragment_title_gps_location)};
+    private String[] titles;
+    private Fragment[] fragments;
+    private MyPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gps_location);
-
         viewPager = findViewById(R.id.viewPager);
+        titles= new String[]{getString(R.string.fragment_title_shopping_list),
+                getString(R.string.fragment_title_gps_location),
+                getString(R.string.fragment_title_shop_location),
+                getString(R.string.fragment_title_grocery_list)};
+        fragments = new Fragment[titles.length];
         fragments[0] = new ShoppingListFragment();
         fragments[1] = new GPSLocationFragment();
+        fragments[2] = new ShopListFragment();
+        fragments[3] = new GroceryListFragment();
         initViewPager();
-
-
     }
 
+
     private void initViewPager(){
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        adapter = new MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-
             }
         });
         viewPager.setCurrentItem(0);
     }
 
-
-
-
-
-
     private class MyPagerAdapter extends FragmentStatePagerAdapter{
 
-        private String[] titles = {getString(R.string.fragment_title_shopping_list),
-                getString(R.string.fragment_title_gps_location)};
+    //    private String[] titles = {getString(R.string.fragment_title_shopping_list),
+     //           getString(R.string.fragment_title_gps_location),
+    //            getString(R.string.fragment_title_shop_location),getString(R.string.fragment_title_grocery_list)};
 
         public MyPagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
@@ -75,7 +76,6 @@ public class GPSLocation extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             String title ="";
             title = titles[position];
-
             return title;
         }
     }

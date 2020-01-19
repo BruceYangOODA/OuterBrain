@@ -52,7 +52,7 @@ public class GPSLocationFragment extends Fragment implements OnMapReadyCallback 
     // LocationManager 時間最少經過多久更新一次資料
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
-    private double latitude, longitude;
+    private double longitude,latitude;
 
 
     private Button btnShowLocation;
