@@ -3,6 +3,8 @@ package nor.zero.outer_brain.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +37,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import nor.zero.outer_brain.R;
-
+import static nor.zero.outer_brain.Constants.*;
+import static nor.zero.outer_brain.MyDatabaseDAO.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,14 +50,15 @@ public class GPSLocationFragment extends Fragment implements OnMapReadyCallback 
     private MyGpsListener myGpsListener;
     private GoogleMap googleMap;
     private UiSettings uiSettings;
+    static String sourceData ="";
 
     // LocationManager 距離最少移動多遠更新一次資料
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
     // LocationManager 時間最少經過多久更新一次資料
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
-    private double longitude,latitude;
-
+    private static double longitude = 120.153894;
+    private static double latitude = 23.177705;
 
     private Button btnShowLocation;
 
@@ -112,7 +117,7 @@ public class GPSLocationFragment extends Fragment implements OnMapReadyCallback 
     private Location getLocation(){
         Location result = null;
         // 獲得GPS 資訊連接許可 ACCESS_FINE_LOCATION 精確位置(GPS) ; ACCESS_COARSE_LOCATION 粗略位置(NET)
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED |
                 ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION},123);
@@ -153,11 +158,7 @@ public class GPSLocationFragment extends Fragment implements OnMapReadyCallback 
     public void onMapReady(GoogleMap gMap) {
         googleMap = gMap;
         uiSettings = googleMap.getUiSettings();
-        LatLng tainan = new LatLng(22.996261,120.218168);
-        LatLng ggg = new LatLng(23.000935,120.218502);
-        float zoomLevel = 16.0f;
-        googleMap.addMarker(new MarkerOptions().position(tainan).title("Marker in Tainan"));
-        googleMap.addMarker(new MarkerOptions().position(ggg).title("Marker in NCKU"));
+
     //    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tainan,zoomLevel));
 
 
@@ -167,10 +168,35 @@ public class GPSLocationFragment extends Fragment implements OnMapReadyCallback 
         if(location!= null){
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-            LatLng center = new LatLng(latitude,longitude);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center,zoomLevel));
         }
+        LatLng center = new LatLng(latitude,longitude);
+        float zoomLevel = 16.0f;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(center,zoomLevel));
+        getData();
+        if(sourceData.equals(""))
+            return;
+        sourceData = sourceData.substring(0,sourceData.length()-1);
+        String[] shopArray = sourceData.split(SEP_SEMI);
+        for(int i=0;i<shopArray.length;i++){
+            String[] items = shopArray[i].split(SEP_GATE);
+            String grocery = items[1];
+            float latitude = Float.parseFloat(items[2]);
+            float longitude = Float.parseFloat(items[3]);
+            LatLng location = new LatLng(latitude,longitude);
+            googleMap.addMarker(new MarkerOptions().position(location).title(grocery));
+        }
+    }
 
+    public void getData(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String result = preferences.getString(ITEM,"");
+        if(result.equals(""))
+            return;
+        result = result.substring(0,result.length()-1);
+        sourceData = result;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ITEM,"");
+        editor.apply();
     }
 
 

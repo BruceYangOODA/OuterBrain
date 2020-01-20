@@ -1,14 +1,17 @@
 package nor.zero.outer_brain.fragments;
 
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +77,12 @@ public class ShoppingListFragment extends Fragment {
                 refreshView();
                 break;
             case REQUEST_CODE_EDIT:
+                if(resultCode == Activity.RESULT_OK)
+                    refreshView(data);
+                else if(resultCode == Activity.RESULT_FIRST_USER){
+                    int position = data.getIntExtra(POSITION,-1);
+                    refreshView(position);
+                }
                 break;
         }
     }
@@ -84,6 +93,35 @@ public class ShoppingListFragment extends Fragment {
         adapter.notifyDataSetChanged();
         shoppingEditorFragment.dismiss();
     }
+    private void refreshView(int position){
+        dataList.remove(position);
+        adapter.notifyDataSetChanged();
+        shoppingEditorFragment.dismiss();
+    }
+    private void refreshView(Intent data){
+        int position = data.getIntExtra(POSITION,-1);
+        ContentValues values = data.getExtras().getParcelable(ITEM);
+        HashMap<String,String> item = getHashMap(values);
+        dataList.set(position,item);
+        adapter.notifyDataSetChanged();
+        shoppingEditorFragment.dismiss();
+    }
+    private HashMap<String,String> getHashMap(ContentValues values){
+        HashMap<String,String> item = new HashMap<>();
+        item.put(KEY_ID,values.getAsString(KEY_ID));
+        item.put(COLUMN_BUY_SUMMARY,values.getAsString(COLUMN_BUY_SUMMARY));
+        item.put(COLUMN_BUY_GROCERY,values.getAsString(COLUMN_BUY_GROCERY));
+        item.put(COLUMN_BUY_SHOP_NAME,values.getAsString(COLUMN_BUY_SHOP_NAME));
+        item.put(COLUMN_BUY_LATITUDE,values.getAsString(COLUMN_BUY_LATITUDE));
+        item.put(COLUMN_BUY_LONGITUDE,values.getAsString(COLUMN_BUY_LONGITUDE));
+        item.put(COLUMN_BUY_TIME,values.getAsString(COLUMN_BUY_TIME));
+        item.put(COLUMN_BUY_REMINDER,values.getAsString(COLUMN_BUY_REMINDER));
+        item.put(COLUMN_BUY_RING_TITLE,values.getAsString(COLUMN_BUY_RING_TITLE));
+        item.put(COLUMN_BUY_RING_URI,values.getAsString(COLUMN_BUY_RING_URI));
+        item.put(COLUMN_BUY_SHOW_ON,values.getAsString(COLUMN_BUY_SHOW_ON));
+        return item;
+    }
+
 
     private void initView(){
         dataList = new LinkedList<>();
@@ -111,9 +149,9 @@ public class ShoppingListFragment extends Fragment {
             item.put(COLUMN_BUY_GROCERY,temp);
             temp = cursor.getString(cursor.getColumnIndex(COLUMN_BUY_SHOP_NAME));
             item.put(COLUMN_BUY_SHOP_NAME,temp);
-            temp = cursor.getString(cursor.getColumnIndex(COLUMN_BUY_LATITUDE));
+            temp = ""+cursor.getFloat(cursor.getColumnIndex(COLUMN_BUY_LATITUDE));
             item.put(COLUMN_BUY_LATITUDE,temp);
-            temp = cursor.getString(cursor.getColumnIndex(COLUMN_BUY_LONGITUDE));
+            temp = ""+cursor.getFloat(cursor.getColumnIndex(COLUMN_BUY_LONGITUDE));
             item.put(COLUMN_BUY_LONGITUDE,temp);
             temp = cursor.getString(cursor.getColumnIndex(COLUMN_BUY_DATE));
             item.put(COLUMN_BUY_DATE,temp);
@@ -153,10 +191,14 @@ public class ShoppingListFragment extends Fragment {
             TextView v = view.findViewById(R.id.tvCount);
             int selection = Integer.parseInt(v.getText().toString());
             int check = isChecked?1:0;
-            int id = Integer.parseInt(dataList.get(selection-1).get(KEY_ID));
+            String id = dataList.get(selection-1).get(KEY_ID);
             ContentValues values = new ContentValues();
             values.put(COLUMN_BUY_SHOW_ON,check);
-            boolean ok = dao.update(TABLE_BUY_SHOPPING,id,values);
+            boolean ok = dao.update(TABLE_BUY_SHOPPING,id,values);  //更新資料庫資料
+            //更新原始資料
+            HashMap<String,String> item = dataList.get(selection-1);
+            item.put(COLUMN_BUY_SHOW_ON,""+check);
+
         }
     };
 
@@ -177,6 +219,26 @@ public class ShoppingListFragment extends Fragment {
         shoppingEditorFragment = new ShoppingEditorFragment(false,-1,dataList);
         shoppingEditorFragment.setTargetFragment(ShoppingListFragment.this,REQUEST_CODE_ADD);
         shoppingEditorFragment.show(getActivity().getSupportFragmentManager(),"Adder");
+    }
+
+    public void sendData(){
+        String result="";
+        if(dataList == null || dataList.size()<1)
+            return;
+        for(int i=0;i<dataList.size();i++){
+            String check = dataList.get(i).get(COLUMN_BUY_SHOW_ON);
+            if(check.equals("0"))
+                continue;
+            String summary = dataList.get(i).get(COLUMN_BUY_SUMMARY);
+            String grocery = dataList.get(i).get(COLUMN_BUY_GROCERY);
+            String latitude = dataList.get(i).get(COLUMN_BUY_LATITUDE);
+            String longitude = dataList.get(i).get(COLUMN_BUY_LONGITUDE);
+            result += summary +SEP_GATE+grocery+SEP_GATE+latitude+SEP_GATE+longitude+SEP_SEMI;
+        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(ITEM,result);
+        editor.apply();
     }
 
 

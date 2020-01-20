@@ -113,13 +113,13 @@ public class ShopListFragment extends Fragment {
         String _id = data.getStringExtra(KEY_ID);
         if(position==-1)
             return;
-        HashMap<String,String> item = getItem(values);
+        HashMap<String,String> item = getHashMap(values);
         item.put(KEY_ID,_id);
         dataList.set(position,item);
         adapter.notifyDataSetChanged();
         shopEditorFragment.dismiss();
     }
-    private HashMap<String,String> getItem(ContentValues values){
+    private HashMap<String,String> getHashMap(ContentValues values){
         HashMap<String,String> item = new HashMap<>();
         item.put(COLUMN_SHOP_NAME,values.getAsString(COLUMN_SHOP_NAME));
         item.put(COLUMN_SHOP_LATITUDE,values.getAsString(COLUMN_SHOP_LATITUDE));
@@ -140,9 +140,9 @@ public class ShopListFragment extends Fragment {
                 item.put(KEY_ID,temp);
                 temp = cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_NAME));
                 item.put(COLUMN_SHOP_NAME,temp);
-                temp = cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_LATITUDE));
+                temp = ""+cursor.getFloat(cursor.getColumnIndex(COLUMN_SHOP_LATITUDE));
                 item.put(COLUMN_SHOP_LATITUDE,temp);
-                temp = cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_LONGITUDE));
+                temp = ""+cursor.getFloat(cursor.getColumnIndex(COLUMN_SHOP_LONGITUDE));
                 item.put(COLUMN_SHOP_LONGITUDE,temp);
                 temp = cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_CLASSIFY));
                 item.put(COLUMN_SHOP_CLASSIFY,temp);

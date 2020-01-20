@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -40,7 +41,8 @@ import static nor.zero.outer_brain.MyDatabaseDAO.*;
 public class ShoppingEditorFragment extends DialogFragment {
     MyDatabaseDAO dao;
     int position;
-    LinkedList<HashMap<String,String>> dataList,shopItems;
+    LinkedList<HashMap<String,String>> dataList;//,shopItems;
+    LinkedList<ContentValues> shopItems;
     View dialogView;
     boolean isEditor;   //true 修改清單 ; false 新增清單
     TextView tvDate, tvTime,tvRing,tvUri;
@@ -104,24 +106,26 @@ public class ShoppingEditorFragment extends DialogFragment {
         super.onResume();
         if(dao == null)
             dao = new MyDatabaseDAO(getContext());
-        initDialogView();
+        initView();
     }
 
 
     private void loadData(){
         shopItems = new LinkedList<>();
         Cursor cursor = dao.getAllCursor(TABLE_SHOP_LOCATION);
-        if(cursor == null || cursor.getCount()<1)
-            return;
+        if(cursor == null || cursor.getCount()<1){
+            Toast.makeText(getContext(),getString(R.string.sys_input_shop_name_first),Toast.LENGTH_SHORT).show();
+            ShoppingEditorFragment.this.dismiss();
+        }
         cursor.moveToFirst();
         shopList = new String[cursor.getCount()];
         for(int i=0;i<cursor.getCount();i++){
             shopList[i] = cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_NAME));
-            HashMap<String,String> item = new HashMap<>();
-            item.put(COLUMN_SHOP_NAME,cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_NAME)));
-            item.put(COLUMN_SHOP_LATITUDE,cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_LATITUDE)));
-            item.put(COLUMN_SHOP_LONGITUDE,cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_LONGITUDE)));
-            shopItems.add(item);
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_SHOP_NAME,cursor.getString(cursor.getColumnIndex(COLUMN_SHOP_NAME)));
+            values.put(COLUMN_SHOP_LATITUDE,cursor.getFloat(cursor.getColumnIndex(COLUMN_SHOP_LATITUDE)));
+            values.put(COLUMN_SHOP_LONGITUDE,cursor.getFloat(cursor.getColumnIndex(COLUMN_SHOP_LONGITUDE)));
+            shopItems.add(values);
             cursor.moveToNext();
         }
         cursor.close();
@@ -147,7 +151,7 @@ public class ShoppingEditorFragment extends DialogFragment {
                     ShoppingEditorFragment.this.dismiss();
                     break;
                 case R.id.btnDelete:
-                    deleteDAO();
+                    askForDelete();
                     break;
                 case R.id.btnEdit:
                     if(isEditor)
@@ -160,7 +164,7 @@ public class ShoppingEditorFragment extends DialogFragment {
 
         }
     };
-    private void initDialogView(){
+    private void initView(){
         loadData();
         etItemTitle = dialogView.findViewById(R.id.etSummary);
         etItemGrocery = dialogView.findViewById(R.id.etGrocery);
@@ -192,9 +196,19 @@ public class ShoppingEditorFragment extends DialogFragment {
         btnEdit.setText(isEditor? getString(R.string.btn_edit): getString(R.string.btn_add));
 //todo selection
         if(isEditor){
-            etItemTitle.setText(dataList.get(position).get(ITEM_TITLE));
-            etItemGrocery.setText(dataList.get(position).get(ITEM_GROCERY));
-            tvDate.setText(dataList.get(position).get(ITEM_DATE));
+            etItemTitle.setText(dataList.get(position).get(COLUMN_BUY_SUMMARY));
+            etItemGrocery.setText(dataList.get(position).get(COLUMN_BUY_GROCERY));
+            String shopName = dataList.get(position).get(COLUMN_BUY_SHOP_NAME);
+            int selector = getSpinnerSelection(shopName);
+            if(selector != -1)
+                spinnerShop.setSelection(selector);
+            tvDate.setText(dataList.get(position).get(COLUMN_BUY_DATE));
+            tvTime.setText(dataList.get(position).get(COLUMN_BUY_TIME));
+            selector = -1;
+            selector = Integer.parseInt(dataList.get(position).get(COLUMN_BUY_REMINDER));
+            setRadioButtonSelected(selector);
+            tvRing.setText(dataList.get(position).get(COLUMN_BUY_RING_TITLE));
+            tvUri.setText(dataList.get(position).get(COLUMN_BUY_RING_URI));
         }
         else{
             radioGroup.check(R.id.radio0);  // radioGroup 預設選項 不用通知
@@ -205,7 +219,22 @@ public class ShoppingEditorFragment extends DialogFragment {
 
     }
 
+    private void setRadioButtonSelected(int selector){
+        if (selector == -1)
+            return;
+        switch (selector){
+            case 0:
+                radioGroup.check(R.id.radio0);
+                break;
+            case 1:
+                radioGroup.check(R.id.radio1);
+                break;
+            case 2:
+                radioGroup.check(R.id.radio2);
+                break;
+        }
 
+    }
 
     private void pickDate(){
         datePickerFragment = new DatePickerFragment(tvDate.getText().toString());
@@ -236,37 +265,75 @@ public class ShoppingEditorFragment extends DialogFragment {
         Intent intent = new Intent();
         getTargetFragment().onActivityResult(REQUEST_CODE_ADD, Activity.RESULT_OK,intent);
     }
-    private void deleteDAO(){}
-    private void updateDAO(){}
-
+    private void askForDelete(){
+        String item = etItemGrocery.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.sys_delete_shopping_item))
+                .setMessage(item)
+                .setCancelable(true)
+                .setNegativeButton(getString(R.string.btn_cancel),null)
+                .setPositiveButton(getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteDAO();
+                    }
+                })
+                .show();
+    }
+    private void deleteDAO(){
+        String id = dataList.get(position).get(KEY_ID);
+        boolean ok = dao.delete(TABLE_BUY_SHOPPING,id);
+        if(!ok)
+            return;
+        Intent intent = new Intent();
+        intent.putExtra(POSITION,position);
+        getTargetFragment().onActivityResult(REQUEST_CODE_EDIT,Activity.RESULT_FIRST_USER,intent);
+    }
+    private void updateDAO(){
+        if(!checkInputValidate())
+            return;
+        String id = dataList.get(position).get(KEY_ID);
+        boolean ok = dao.update(TABLE_BUY_SHOPPING,id,getContentValues());  //更新資料庫
+        if(ok){
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putInt(POSITION,position);
+            ContentValues item = getContentValues();
+            item.put(KEY_ID,dataList.get(position).get(KEY_ID));
+            bundle.putParcelable(ITEM,item);
+            intent.putExtras(bundle);
+            //更新原始資料 與 View
+            getTargetFragment().onActivityResult(REQUEST_CODE_EDIT,Activity.RESULT_OK,intent);
+        }
+    }
     private ContentValues getContentValues(){
         ContentValues values = new ContentValues();
         values.put(COLUMN_BUY_SUMMARY,etItemTitle.getText().toString());
         values.put(COLUMN_BUY_GROCERY,etItemGrocery.getText().toString());
         values.put(COLUMN_BUY_SHOP_NAME,spinnerShop.getSelectedItem().toString());
-        int selector = getSpinnerSelection();
+        String shopName = spinnerShop.getSelectedItem().toString();
+        int selector = getSpinnerSelection(shopName);
         if(selector != -1){
-            values.put(COLUMN_BUY_LATITUDE,shopItems.get(selector).get(COLUMN_SHOP_LATITUDE));
-            values.put(COLUMN_BUY_LONGITUDE,shopItems.get(selector).get(COLUMN_SHOP_LONGITUDE));
+            values.put(COLUMN_BUY_LATITUDE,shopItems.get(selector).getAsFloat(COLUMN_SHOP_LATITUDE));
+            values.put(COLUMN_BUY_LONGITUDE,shopItems.get(selector).getAsFloat(COLUMN_SHOP_LONGITUDE));
         }
         values.put(COLUMN_BUY_DATE,tvDate.getText().toString());
-        values.put(COLUMN_BUY_TIME,tvDate.getText().toString());
+        values.put(COLUMN_BUY_TIME,tvTime.getText().toString());
         values.put(COLUMN_BUY_REMINDER,selection);
         values.put(COLUMN_BUY_RING_TITLE,tvRing.getText().toString());
         values.put(COLUMN_BUY_RING_URI,tvUri.getText().toString());
         if(isEditor)
-            values.put(COLUMN_BUY_SHOW_ON,dataList.get(position).get(COLUMN_BUY_SHOW_ON));
+            values.put(COLUMN_BUY_SHOW_ON,Integer.parseInt(dataList.get(position).get(COLUMN_BUY_SHOW_ON)));
         else
             values.put(COLUMN_BUY_SHOW_ON,0);
         return values;
     }
 
-    private int getSpinnerSelection(){
-        String shop = spinnerShop.getSelectedItem().toString();
+    private int getSpinnerSelection(String shopName){
         String temp;
         for(int i=0;i<shopItems.size();i++){
-            temp = shopItems.get(i).get(COLUMN_SHOP_NAME);
-            if(temp.equals(shop))
+            temp = shopItems.get(i).getAsString(COLUMN_SHOP_NAME);
+            if(temp.equals(shopName))
                 return i;
         }
         return -1;
@@ -335,7 +402,6 @@ public class ShoppingEditorFragment extends DialogFragment {
             case REQUEST_CODE_RING:
                 String ringTitle = data.getStringExtra(PICK_RING_TITLE);
                 String ringUri = data.getStringExtra(PICK_RING_URI);
-                //todo 設置Uri進入陣列
                 tvRing.setText(ringTitle);
                 tvUri.setText(ringUri);
                 ringPickerFragment.dismiss();
@@ -343,6 +409,7 @@ public class ShoppingEditorFragment extends DialogFragment {
             case REQUEST_CODE_INPUT:
                 String result = data.getStringExtra(ITEM);
                 result = result.substring(0,result.length()-1);
+                result = etItemGrocery.getText().toString() + result;
                 etItemGrocery.setText(result);
                 smartInputListFragment.dismiss();
                 break;

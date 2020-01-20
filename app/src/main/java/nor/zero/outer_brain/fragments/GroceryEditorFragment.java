@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -62,7 +63,7 @@ public class GroceryEditorFragment extends DialogFragment {
                     GroceryEditorFragment.this.dismiss();
                     break;
                 case R.id.btnDelete:
-                    deleteDAO();
+                    askForDelete();
                     break;
                 case R.id.btnEdit:
                     if(isEditor){
@@ -110,9 +111,9 @@ public class GroceryEditorFragment extends DialogFragment {
     }
     private void deleteDAO(){
         //刪除資料庫資料
-        String _id = dataList.get(position).get(KEY_ID);
-        boolean _ok = dao.delete(TABLE_ITEM_GROCERY,_id);
-        if(!_ok)    //刪除失敗
+        String id = dataList.get(position).get(KEY_ID);
+        boolean ok = dao.delete(TABLE_ITEM_GROCERY,id);
+        if(!ok)    //刪除失敗
             return;
         Intent intent = new Intent();
         intent.putExtra(POSITION,position);
@@ -122,10 +123,10 @@ public class GroceryEditorFragment extends DialogFragment {
     private void updateDAO(){
         if(!checkInputValidate())
             return;
-        int _id = Integer.parseInt(dataList.get(position).get(KEY_ID));
+        String id = dataList.get(position).get(KEY_ID);
         //資料庫更新
-        boolean _ok = dao.update(TABLE_ITEM_GROCERY,_id,getContentValues());
-        if(!_ok)
+        boolean ok = dao.update(TABLE_ITEM_GROCERY,id,getContentValues());
+        if(!ok)
             return;
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
@@ -151,5 +152,20 @@ public class GroceryEditorFragment extends DialogFragment {
         if(result == false)
             Toast.makeText(getContext(),getString(R.string.sys_invalidate_input_grocery),Toast.LENGTH_SHORT).show();
         return result;
+    }
+    private void askForDelete(){
+        String item = etName.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.sys_delete_grocery_item))
+                .setMessage(item)
+                .setCancelable(true)
+                .setNegativeButton(getString(R.string.btn_cancel),null)
+                .setPositiveButton(getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteDAO();
+                    }
+                })
+                .show();
     }
 }

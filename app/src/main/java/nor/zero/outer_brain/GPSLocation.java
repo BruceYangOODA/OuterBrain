@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import nor.zero.outer_brain.fragments.GPSLocationFragment;
 import nor.zero.outer_brain.fragments.GroceryListFragment;
@@ -21,6 +22,7 @@ public class GPSLocation extends AppCompatActivity {
     private String[] titles;
     private Fragment[] fragments;
     private MyPagerAdapter adapter;
+    static int before ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +45,23 @@ public class GPSLocation extends AppCompatActivity {
     private void initViewPager(){
         adapter = new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+        before = 0;
+        viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
-                super.onPageSelected(position);
+                //super.onPageSelected(position);
+               // if(position==1)
+                //    Log.v("aaa","MAP");
+                if(before==0 && position==1){
+                    ShoppingListFragment from = (ShoppingListFragment) fragments[0];
+                    GPSLocationFragment to = (GPSLocationFragment) fragments[1];
+                    from.sendData();
+                    //to.getData();
+                }
+                before = position;
             }
         });
-        viewPager.setCurrentItem(0);
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter{

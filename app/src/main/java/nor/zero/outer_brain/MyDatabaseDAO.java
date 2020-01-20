@@ -11,11 +11,13 @@ public class MyDatabaseDAO {
     private SQLiteDatabase db ;
     public static final String TEXT_TYPE = " TEXT";
     public static final String INT_TYPE = " INT";
-    public static final String REAL_TYPE = " REAL";
+    public static final String FLOAT_TYPE = " FLOAT";
     public static final String DATE_TYPE = " DATE";
     public static final String TIME_TYPE = " TIME";
     public static final String BIT_TYPE = " BIT";
     public static final String SEP_COMMA = ",";
+    public static final String SEP_SEMI = ";";
+    public static final String SEP_GATE = "&404!";
     public static final String NOT_NULL = " NUT NULL";
     public static final String KEY_ID = "_id";
 
@@ -47,8 +49,8 @@ public class MyDatabaseDAO {
     public static final String CREATE_TABLE_SHOP_LOCATION = "CREATE TABLE "+TABLE_SHOP_LOCATION
             +" ("+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
             +COLUMN_SHOP_NAME+TEXT_TYPE+NOT_NULL+SEP_COMMA
-            +COLUMN_SHOP_LATITUDE+REAL_TYPE+NOT_NULL+SEP_COMMA
-            +COLUMN_SHOP_LONGITUDE+REAL_TYPE+NOT_NULL+SEP_COMMA
+            +COLUMN_SHOP_LATITUDE+FLOAT_TYPE+NOT_NULL+SEP_COMMA
+            +COLUMN_SHOP_LONGITUDE+FLOAT_TYPE+NOT_NULL+SEP_COMMA
             +COLUMN_SHOP_CLASSIFY+TEXT_TYPE+SEP_COMMA
             +COLUMN_SHOP_ADDRESS+TEXT_TYPE+SEP_COMMA
             +COLUMN_SHOP_NOTE+TEXT_TYPE
@@ -63,8 +65,8 @@ public class MyDatabaseDAO {
             +COLUMN_BUY_SUMMARY+TEXT_TYPE+SEP_COMMA
             +COLUMN_BUY_GROCERY+TEXT_TYPE+SEP_COMMA
             +COLUMN_BUY_SHOP_NAME+TEXT_TYPE+SEP_COMMA
-            +COLUMN_BUY_LATITUDE+REAL_TYPE+SEP_COMMA
-            +COLUMN_BUY_LONGITUDE+REAL_TYPE+SEP_COMMA
+            +COLUMN_BUY_LATITUDE+FLOAT_TYPE+SEP_COMMA
+            +COLUMN_BUY_LONGITUDE+FLOAT_TYPE+SEP_COMMA
             +COLUMN_BUY_DATE+DATE_TYPE+SEP_COMMA
             +COLUMN_BUY_TIME+TIME_TYPE+SEP_COMMA
             +COLUMN_BUY_REMINDER+INT_TYPE+SEP_COMMA
@@ -76,10 +78,12 @@ public class MyDatabaseDAO {
     public MyDatabaseDAO(Context context){
         db = MyDBHelper.getDatabase(context);
         //reset
-      //  db.execSQL("Drop Table if exists "+TABLE_BUY_SHOPPING);
-        //db.execSQL(MyDatabaseDAO.CREATE_TABLE_SHOP_LOCATION);
+      //  db.execSQL("Drop Table if exists "+TABLE_SHOP_LOCATION);
+        //  db.execSQL("Drop Table if exists "+TABLE_ITEM_GROCERY);
+          //db.execSQL("Drop Table if exists "+TABLE_BUY_SHOPPING);
+        //db.execSQL(CREATE_TABLE_SHOP_LOCATION);
         //db.execSQL(CREATE_TABLE_ITEM_GROCERY);
-      //  db.execSQL(CREATE_TABLE_BUY_GROCERY);
+        //db.execSQL(CREATE_TABLE_BUY_GROCERY);
     }
 
     public Cursor getAllCursor(String tableName){
@@ -91,8 +95,8 @@ public class MyDatabaseDAO {
         long id = db.insert(tableName,null,values);
         return id;
     }
-    public boolean update(String tableName,int _id,ContentValues values){
-        String where = KEY_ID + "=" +_id;
+    public boolean update(String tableName,String id,ContentValues values){
+        String where = KEY_ID + "=" +id;
         return db.update(tableName,values,where,null) > 0;
     }
     public boolean delete(String tableName,String id){

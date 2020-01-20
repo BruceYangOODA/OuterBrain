@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -63,7 +64,7 @@ public class ShopEditorFragment extends DialogFragment {
                     ShopEditorFragment.this.dismiss();
                     break;
                 case R.id.btnDelete:
-                    deleteDAO();
+                    askForDelete();
                     break;
                 case R.id.btnEdit:
                     if(isEditor){
@@ -122,9 +123,9 @@ public class ShopEditorFragment extends DialogFragment {
     }
     private void deleteDAO(){
         //刪除資料庫資料
-        String _id = dataList.get(position).get(KEY_ID);
-        boolean _ok =dao.delete(TABLE_SHOP_LOCATION,_id);
-        if(!_ok)    //刪除失敗
+        String id = dataList.get(position).get(KEY_ID);
+        boolean ok =dao.delete(TABLE_SHOP_LOCATION,id);
+        if(!ok)    //刪除失敗
             return;
         Intent intent = new Intent();
         intent.putExtra(POSITION,position);
@@ -134,9 +135,9 @@ public class ShopEditorFragment extends DialogFragment {
     private void updateDAO(){
         if(!checkInputValidate())
             return;
-        int _id = Integer.parseInt(dataList.get(position).get(KEY_ID));
+        String id = dataList.get(position).get(KEY_ID);
         //資料庫更新
-        boolean _ok = dao.update(TABLE_SHOP_LOCATION,_id,getContentValues());
+        boolean _ok = dao.update(TABLE_SHOP_LOCATION,id,getContentValues());
         if(!_ok)    //更新失敗
             return;
         Intent intent = new Intent();
@@ -172,5 +173,20 @@ public class ShopEditorFragment extends DialogFragment {
         if(result == false)
             Toast.makeText(getContext(),getString(R.string.sys_invalidate_input_shop),Toast.LENGTH_SHORT).show();
         return result;
+    }
+    private void askForDelete(){
+        String item = etShopName.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getString(R.string.sys_delete_shop_item))
+                .setMessage(item)
+                .setCancelable(true)
+                .setNegativeButton(getString(R.string.btn_cancel),null)
+                .setPositiveButton(getString(R.string.btn_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteDAO();
+                    }
+                })
+                .show();
     }
 }

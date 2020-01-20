@@ -58,9 +58,13 @@
     <string name="sys_loading_file">讀取檔案中</string>
     <string name="sys_select_date">選擇時間</string>
     <string name="sys_select_time">選擇日期</string>
+    <string name="sys_delete_shopping_item">刪除購物清單</string>
+    <string name="sys_delete_shop_item">刪除商店資料</string>
+    <string name="sys_delete_grocery_item">刪除商品資料</string>
     <string name="sys_invalidate_input_shop">請輸入店名與經緯度</string>
     <string name="sys_invalidate_input_grocery">請輸入商品名稱</string>
     <string name="sys_invalidate_input_buy">請輸入購買物品</string>
+    <string name="sys_input_shop_name_first">請至商店位置輸入資料</string>
 
 
 
